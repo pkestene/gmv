@@ -17,6 +17,7 @@
  *				Paul Haeberli - 1984
  *
  */
+#include "gmv_config.h"
 
 #if defined(LINUX) || defined(NT) || defined(MACX)
 #define _IORW  256
@@ -25,7 +26,7 @@
 #define _IOERR  32
 #endif
 
-#include	<stdio.h> 
+#include	<stdio.h>
 #include	<stdlib.h>
 #include        <string.h>
 #ifdef MACX
@@ -108,7 +109,7 @@ IMAGE *imgopen(long f, char *file, char *mode,
 		}
 		image->min = 10000000;
 		image->max = 0;
-		isetname(image,"no name"); 
+		isetname(image,"no name");
 		image->wastebytes = 0;
 		image->dorev = 0;
 
@@ -130,7 +131,7 @@ IMAGE *imgopen(long f, char *file, char *mode,
 		    i_errhdlr("iopen: error on read of image header\n");
 		    return NULL;
 		}
-		if( ((image->imagic>>8) | ((image->imagic&0xff)<<8)) 
+		if( ((image->imagic>>8) | ((image->imagic&0xff)<<8))
 							     == IMAGIC ) {
 		    image->dorev = 1;
 		    cvtimage(image);
@@ -183,7 +184,7 @@ IMAGE *imgopen(long f, char *file, char *mode,
 	image->cnt = 0;
 	image->ptr = 0;
 	image->base = 0;
-	if( (image->tmpbuf = ibufalloc(image)) == 0 ) {	
+	if( (image->tmpbuf = ibufalloc(image)) == 0 ) {
 	    i_errhdlr("iopen: error on tmpbuf alloc %d\n",image->xsize);
 	    return NULL;
 	}
@@ -199,12 +200,12 @@ unsigned short *ibufalloc(IMAGE *image)
     return (unsigned short *)malloc(IBUFSIZE(image->xsize));
 }
 
-reverse(lwrd) 
+reverse(lwrd)
 register unsigned int lwrd;
 {
-    return ((lwrd>>24) 		| 
-	   (lwrd>>8 & 0xff00) 	| 
-	   (lwrd<<8 & 0xff0000) | 
+    return ((lwrd>>24) 		|
+	   (lwrd>>8 & 0xff00) 	|
+	   (lwrd<<8 & 0xff0000) |
 	   (lwrd<<24) 		);
 }
 
@@ -232,9 +233,9 @@ register int n;
 
     for(i=0; i<nints; i++) {
 	lwrd = buffer[i];
-	buffer[i] =     ((lwrd>>24) 		| 
-	   		(lwrd>>8 & 0xff00) 	| 
-	   		(lwrd<<8 & 0xff0000) 	| 
+	buffer[i] =     ((lwrd>>24) 		|
+	   		(lwrd>>8 & 0xff00) 	|
+	   		(lwrd<<8 & 0xff0000) 	|
 	   		(lwrd<<24) 		);
     }
 }
@@ -271,7 +272,7 @@ char *fmt;
 {
 	if(i_errfunc) {
 		char ebuf[2048];	/* be generous; if an error includes a
-			pathname, the maxlen is 1024, so we shouldn't ever 
+			pathname, the maxlen is 1024, so we shouldn't ever
 			overflow this! */
 		sprintf(ebuf, fmt, a1, a2, a3, a4);
 		(*i_errfunc)(ebuf);
@@ -342,10 +343,10 @@ int iclose(IMAGE *image)
 	    if(image->dorev)
 		cvtints(image->rowstart,tablesize);
 #ifdef CRAY
-	    if (cimg_write(image,(char *)(image->rowstart),acttablesize) 
+	    if (cimg_write(image,(char *)(image->rowstart),acttablesize)
                != tablesize) {
 #else
-	    if (img_write(image,(char *)(image->rowstart),tablesize) 
+	    if (img_write(image,(char *)(image->rowstart),tablesize)
                != tablesize) {
 #endif
 		i_errhdlr("iclose: error on write of rowstart\n");
@@ -354,10 +355,10 @@ int iclose(IMAGE *image)
 	    if(image->dorev)
 		cvtints(image->rowsize,tablesize);
 #ifdef CRAY
-	    if (cimg_write(image,(char *)(image->rowsize),acttablesize) 
+	    if (cimg_write(image,(char *)(image->rowsize),acttablesize)
                != tablesize) {
 #else
-	    if (img_write(image,(char *)(image->rowsize),tablesize) 
+	    if (img_write(image,(char *)(image->rowsize),tablesize)
                != tablesize) {
 #endif
 		i_errhdlr("iclose: error on write of rowsize\n");
@@ -405,7 +406,7 @@ int iflush(IMAGE *image)
  */
 
 int putrow(IMAGE *image, unsigned short *buffer,
-		unsigned int y, unsigned int z) 
+		unsigned int y, unsigned int z)
 {
     register unsigned short 	*sptr;
     register unsigned char      *cptr;
@@ -421,12 +422,12 @@ int putrow(IMAGE *image, unsigned short *buffer,
 	y = 0;
     if(ISVERBATIM(image->type)) {
 	switch(BPP(image->type)) {
-	    case 1: 
+	    case 1:
 		min = image->min;
 		max = image->max;
 		cptr = (unsigned char *)image->tmpbuf;
 		sptr = buffer;
-		for(x=image->xsize; x--;) { 
+		for(x=image->xsize; x--;) {
 		    *cptr = *sptr++;
 		    if (*cptr > max) max = *cptr;
 		    if (*cptr < min) min = *cptr;
@@ -436,17 +437,17 @@ int putrow(IMAGE *image, unsigned short *buffer,
 		image->max = max;
 		img_seek(image,y,z);
 		cnt = image->xsize;
-		if (img_write(image,(char *)(image->tmpbuf),cnt) != cnt) 
+		if (img_write(image,(char *)(image->tmpbuf),cnt) != cnt)
 		    return -1;
 		else
 		    return cnt;
 		/* NOTREACHED */
 
-	    case 2: 
+	    case 2:
 		min = image->min;
 		max = image->max;
 		sptr = buffer;
-		for(x=image->xsize; x--;) { 
+		for(x=image->xsize; x--;) {
 		    if (*sptr > max) max = *sptr;
 		    if (*sptr < min) min = *sptr;
 		    sptr++;
@@ -455,14 +456,14 @@ int putrow(IMAGE *image, unsigned short *buffer,
 		image->max = max;
 		img_seek(image,y,z);
 		cnt = image->xsize<<1;
-		if(image->dorev)	
+		if(image->dorev)
 		    cvtshorts(buffer,cnt);
 		if (img_write(image,(char *)(buffer),cnt) != cnt) {
-		    if(image->dorev)	
+		    if(image->dorev)
 			cvtshorts(buffer,cnt);
 		    return -1;
 		} else {
-		    if(image->dorev)	
+		    if(image->dorev)
 			cvtshorts(buffer,cnt);
 		    return image->xsize;
 		}
@@ -473,11 +474,11 @@ int putrow(IMAGE *image, unsigned short *buffer,
 	}
     } else if(ISRLE(image->type)) {
 	switch(BPP(image->type)) {
-	    case 1: 
+	    case 1:
 		min = image->min;
 		max = image->max;
 		sptr = buffer;
-		for(x=image->xsize; x--;) { 
+		for(x=image->xsize; x--;) {
 		    if (*sptr > max) max = *sptr;
 		    if (*sptr < min) min = *sptr;
                     sptr++;
@@ -488,17 +489,17 @@ int putrow(IMAGE *image, unsigned short *buffer,
 		img_setrowsize(image,cnt,y,z);
 		img_seek(image,y,z);
 
-		if (img_write(image,(char *)(image->tmpbuf),cnt) != cnt) 
+		if (img_write(image,(char *)(image->tmpbuf),cnt) != cnt)
 		    return -1;
 		else
 		    return image->xsize;
 		/* NOTREACHED */
 
-	    case 2: 
+	    case 2:
 		min = image->min;
 		max = image->max;
 		sptr = buffer;
-		for(x=image->xsize; x--;) { 
+		for(x=image->xsize; x--;) {
 		    if (*sptr > max) max = *sptr;
 		    if (*sptr < min) min = *sptr;
 		    sptr++;
@@ -525,7 +526,7 @@ int putrow(IMAGE *image, unsigned short *buffer,
 	    default:
 		i_errhdlr("putrow: weird bpp\n");
 	}
-    } else 
+    } else
 	i_errhdlr("putrow: weird image type\n");
     return(-1);
 }
@@ -551,9 +552,9 @@ unsigned int img_seek(IMAGE *image, unsigned int y, unsigned int z)
 	switch(image->dim) {
 	    case 1:
 		return img_optseek(image, 512L);
-	    case 2: 
+	    case 2:
 		return img_optseek(image,512L+(y*image->xsize)*BPP(image->type));
-	    case 3: 
+	    case 3:
 		return img_optseek(image,
 		    512L+(y*image->xsize+z*image->xsize*image->ysize)*
 							BPP(image->type));
@@ -565,15 +566,15 @@ unsigned int img_seek(IMAGE *image, unsigned int y, unsigned int z)
 	switch(image->dim) {
 	    case 1:
 		return img_optseek(image, image->rowstart[0]);
-	    case 2: 
+	    case 2:
 		return img_optseek(image, image->rowstart[y]);
-	    case 3: 
+	    case 3:
 		return img_optseek(image, image->rowstart[y+z*image->ysize]);
 	    default:
 		i_errhdlr("img_seek: weird dim\n");
 		break;
 	}
-    } else 
+    } else
 	i_errhdlr("img_seek: weird image type\n");
     return((unsigned int)-1);
 }
@@ -591,7 +592,7 @@ int img_write(IMAGE *image, char *buffer,int count)
     int retval;
 
     retval =  write(image->file,buffer,count);
-    if(retval == count) 
+    if(retval == count)
 	image->offset += count;
     else
 	image->offset = -1;
@@ -603,7 +604,7 @@ int img_read(IMAGE *image, char *buffer, int count)
     int retval;
 
     retval =  read(image->file,buffer,count);
-    if(retval == count) 
+    if(retval == count)
 	image->offset += count;
     else
 	image->offset = -1;
@@ -642,7 +643,7 @@ void img_setrowsize(IMAGE *image, int cnt, int y, int z)
 {
     int *sizeptr;
 
-    if(img_badrow(image,y,z)) 
+    if(img_badrow(image,y,z))
 	return;
     switch(image->dim) {
 	case 1:
@@ -656,8 +657,8 @@ void img_setrowsize(IMAGE *image, int cnt, int y, int z)
 	case 3:
 	    sizeptr = &image->rowsize[y+z*image->ysize];
 	    image->rowstart[y+z*image->ysize] = image->rleend;
-    }	
-    if(*sizeptr != -1) 
+    }
+    if(*sizeptr != -1)
 	image->wastebytes += *sizeptr;
     *sizeptr = cnt;
     image->rleend += cnt;
@@ -783,7 +784,7 @@ void img_rle_expand(unsigned short *rlebuf, int ibpp,
 	register unsigned short pixel,count;
 
 	doexpand;
-    } else 
+    } else
 	i_errhdlr("rle_expand: bad bpp: %d %d\n",ibpp,obpp);
 }
 
@@ -806,7 +807,7 @@ void isetcolormap(IMAGE *image, int colormap)
 }
 
 #ifdef CRAY
- 
+
 int cimg_write(IMAGE *image, char *buffer,int count)
 {
   int retval, nitems;
@@ -836,7 +837,7 @@ int cwrtshort(int f, short *shortptr, int nitems)
    tbitoff = 0;  tierr = 0; ttype = 7;
 
    shortbuf = (short *)malloc(sizeof(int)*nitems);
- 
+
    tierr = CRAY2IEG(&ttype, &nitems, shortbuf, &tbitoff, shortptr);
    ret_stat = write(f, shortbuf, shortsize*nitems);
    free(shortbuf);
@@ -855,7 +856,7 @@ int cwrtlint(int f, int *intptr, int nitems)
    tbitoff = 0;  tierr = 0; ttype = 1;
 
    intbuf = (int *)malloc(intsize*nitems);
- 
+
    tierr = CRAY2IEG(&ttype, &nitems, intbuf, &tbitoff, intptr);
    ret_stat = write(f, intbuf, intsize*nitems);
    free(intbuf);

@@ -1,15 +1,15 @@
 /*
     This program was prepared by the Regents of the University
-    of California at Los Alamos National Laboratory under 
-    Contract No. W-7405-ENG-36 with the U.S. Department of 
-    Energy.  The University has certain right in the program 
+    of California at Los Alamos National Laboratory under
+    Contract No. W-7405-ENG-36 with the U.S. Department of
+    Energy.  The University has certain right in the program
     pusuant to the contract and the program should not be
     copied or distributed outside your organization.  All rights
     in the program are reserved by the DOE and the University.
-    Neither the U.S. Government nor the University makes any 
-    warranty, express or implied, or assumes any liability or 
+    Neither the U.S. Government nor the University makes any
+    warranty, express or implied, or assumes any liability or
     responsibility for the use of this software.
- 
+
     Software Author:  Frank A. Ortega, XCM (505) 665-0588
                       fao@lanl.gov
     The General Mesh Viewer (GMV) control number is LA-CC-95-5
@@ -18,28 +18,28 @@
 
     Update as of 2016-10-12 by Tony Jones, CPFD Software, LLC.:
 
-    Tony Jones worked with Frank Ortega over the years to 
+    Tony Jones worked with Frank Ortega over the years to
     provide enhancements, fixes, and other changes to GMV,
-    including porting of GMV to work via Cygwin in Windows.  
-    Frank Ortega passed away suddenly on December 11, 2012.  
-    Tony Jones has since been the sole maintainer for GMV on 
-    behalf of CPFD Software, and has worked with LANL to provide 
+    including porting of GMV to work via Cygwin in Windows.
+    Frank Ortega passed away suddenly on December 11, 2012.
+    Tony Jones has since been the sole maintainer for GMV on
+    behalf of CPFD Software, and has worked with LANL to provide
     a path forward for GMV.
     LANL agreed to open source GMV under GPL v3 in April, 2013,
-    allowing CPFD Software to maintain the source code and 
+    allowing CPFD Software to maintain the source code and
     distribute GMV.
     LANL License Agreement Number: 09-C02641
-    
+
     Since then, Tony Jones has made mostly fixes and some
-    improvements to GMV.  The current state of the code is 
+    improvements to GMV.  The current state of the code is
     stable and GMV is still used heavily by CPFD Software.
 
-    Please note that GMV is now protected under the GPL v3 
-    license, and is copyright of Los Alamos National Laboratory.  
-    All software is provided "AS IS", without warranty of any 
+    Please note that GMV is now protected under the GPL v3
+    license, and is copyright of Los Alamos National Laboratory.
+    All software is provided "AS IS", without warranty of any
     kind.  CPFD Software cannot provide support for GMV.
 
-    Code was previously kept in an internal CPFD Software 
+    Code was previously kept in an internal CPFD Software
     subversion repository, and sent via zipped source packages
     per GPL v3 requirements.  It is now being hosted on GitHub.
 */
@@ -52,6 +52,8 @@
 #endif
 
 //#include <GLwMDrawA.h>
+
+#include "gmv_config.h"
 
 #ifdef LINUX*/
 #include <GL/gl.h>
@@ -69,7 +71,7 @@
 #include <Xm/Label.h>
 #include <Xm/BulletinB.h>
 #include <Xm/PushB.h>
- 
+
 #include <stdlib.h>
 #include <math.h>
 //#include <malloc.h>
@@ -146,29 +148,29 @@ int top_depth;
 
 int fileinfoflag, st_flag;
 
-/* 
+/*
 static String fallback_resources[] = {
     "*frame*shadowType: SHADOW_IN",
     "*fontList: -adobe-courier-bold-r-*-*-14-*",
     NULL
     };
 */
- 
-static int stereoBuf[] = 
+
+static int stereoBuf[] =
    {
     GLX_STEREO, GLX_DOUBLEBUFFER, GLX_RGBA, GLX_DEPTH_SIZE, 16,
-    GLX_RED_SIZE, 1, GLX_GREEN_SIZE, 1, GLX_BLUE_SIZE, 1,  
+    GLX_RED_SIZE, 1, GLX_GREEN_SIZE, 1, GLX_BLUE_SIZE, 1,
     None
    };
- 
-static int dblBuf[] = 
+
+static int dblBuf[] =
    {
     GLX_DOUBLEBUFFER, GLX_RGBA, GLX_DEPTH_SIZE, 16,
-    GLX_RED_SIZE, 1, GLX_GREEN_SIZE, 1, GLX_BLUE_SIZE, 1,  
+    GLX_RED_SIZE, 1, GLX_GREEN_SIZE, 1, GLX_BLUE_SIZE, 1,
     None
    };
 static int *snglBuf = &dblBuf[1];
-GLboolean    doubleBuffer = GL_TRUE, hasStereo = GL_FALSE; 
+GLboolean    doubleBuffer = GL_TRUE, hasStereo = GL_FALSE;
 GLXContext glx_glw_context, glx_axglw_context, glx_stglw_context;
 static short infileflag = 0;
 char monstat[40];
@@ -177,7 +179,7 @@ static Bool WaitForNotify(Display *d, XEvent *e, char *arg)
     return (e->type == MapNotify) && (e->xmap.window == (Window)arg);
    }
 
-void drawit(), readgmv(), get_statistics(), initstuff(), 
+void drawit(), readgmv(), get_statistics(), initstuff(),
      compute_boundary_triangle_unit_normals(),
      init_motif(Widget toplevel), getattributes(), gmvexit();
 
@@ -220,7 +222,7 @@ int main(int argc,char *argv[])
 
    movieflag = 0;  snapshotflag = 0;  windowflag = 0;  readattributes = 0;
    readattributes_found_width_height = 0;
-   windowxmin = 250;  windowymin = 50;  windowwidth = 900;  
+   windowxmin = 250;  windowymin = 50;  windowwidth = 900;
    windowheight = 700;  debugflag = 0;  rdgmvcount = 0;  gridonlyflag = 0;
    noprintflag = 0;  fileinfoflag = 0;  shmemflag = 0;  st_flag = 0;
    strcpy(batchfilnam,"AzsnapgmvAz");
@@ -255,20 +257,20 @@ int main(int argc,char *argv[])
     initcolors();
     initglobals();
 
- 
+
    /*  Open field database file.  */
    fldfilenam = tempnam(NULL,pfxn);
-   fieldfile = fopen(fldfilenam,"w+");   
+   fieldfile = fopen(fldfilenam,"w+");
    cfldfilenam = tempnam(NULL,pfxc);
-   cfieldfile = fopen(cfldfilenam,"w+");   
+   cfieldfile = fopen(cfldfilenam,"w+");
    polyfilenam = tempnam(NULL,pfxp);
-   polyfile = fopen(polyfilenam,"w+");   
+   polyfile = fopen(polyfilenam,"w+");
    sfldfilenam = tempnam(NULL,pfxs);
-   sfieldfile = fopen(sfldfilenam,"w+");   
+   sfieldfile = fopen(sfldfilenam,"w+");
    ffldfilenam = tempnam(NULL,pfxf);
-   ffieldfile = fopen(ffldfilenam,"w+");   
-   unlink(fldfilenam); 
-   unlink(cfldfilenam); 
+   ffieldfile = fopen(ffldfilenam,"w+");
+   unlink(fldfilenam);
+   unlink(cfldfilenam);
    unlink(polyfilenam);
    unlink(sfldfilenam);
    unlink(ffldfilenam);
@@ -290,11 +292,11 @@ int main(int argc,char *argv[])
 #endif
    if (movieflag == 0) main_motif(argc,argv);
    else main_movie();
-   
+
    return 0;
 }
- 
- 
+
+
 void commandline(int argc,char *argv[],char infile[256],
                  char datafile[80])
 {
@@ -435,14 +437,14 @@ void commandline(int argc,char *argv[],char infile[256],
         fprintf(stdout,"  -fileinfo                       File info\n");
         fprintf(stdout,"  -shmem                          Enable shared memory file\n");
         fprintf(stdout,"  -stereo                         Enable stereo image pairs\n");
-        
+
         exit(1);
       }
- 
+
       i++;
      }
 }
- 
+
 void main_motif(int argc,char *argv[])
 {
   XmString string;
@@ -451,7 +453,7 @@ void main_motif(int argc,char *argv[])
   Arg args[20];
   Window windows[4];
 
-#ifdef IRSTEREO 
+#ifdef IRSTEREO
   XSGIvcChannelInfo *cinfo_return;
   char *mstr;
   int channel;
@@ -459,7 +461,7 @@ void main_motif(int argc,char *argv[])
   void SetBackingStoreG(Widget w,
                         void (*cb),
                         XtPointer data),
-       SetBackingStore(), lpexpose(), 
+       SetBackingStore(), lpexpose(),
        draw_expose_callback(), expose_axwindow();
   void getTrueColor(int scrn);
 
@@ -538,7 +540,7 @@ void main_motif(int argc,char *argv[])
         }
      }
 #endif
- 
+
    /*  Find an OpenGL-capable RGB visual with depth buffer.  */
    if (vi == NULL)
       vi = glXChooseVisual(dpy, DefaultScreen(dpy), dblBuf);
@@ -550,8 +552,8 @@ void main_motif(int argc,char *argv[])
       if (vi == NULL)
           XtAppError(app, "no RGB visual with depth buffer");
       doubleBuffer = GL_FALSE;
-     } 
- 
+     }
+
    waitcsr = XCreateFontCursor(dpy,XC_watch);
 
    init_motif(toplevel);
@@ -622,11 +624,11 @@ void main_motif(int argc,char *argv[])
          XtDispatchEvent(&event);
         }
      }
- 
+
 }
- 
+
 void main_movie()
- 
+
 {
 #ifdef BATCH
   int bsize;
@@ -644,7 +646,7 @@ void main_movie()
 #endif
    int gmverr, exoerr, x3derr, i;
    char snapsuffix[10];
- 
+
    /*  Check that the file is a valid GMV input file.  */
    gmverr = 1;  exoerr = 1;  x3derr = 1;
    gmvinflag = 0;  exodusinflag = 0;  x3dinflag = 0;
@@ -738,16 +740,16 @@ void main_movie()
    wmhints.input = False;
    wmhints.flags = StateHint | InputHint;
 
-   classhints.res_name = (char *) malloc(strlen(appname)+1); 
+   classhints.res_name = (char *) malloc(strlen(appname)+1);
    strcpy(classhints.res_name, appname);
-   classhints.res_class= (char *) malloc(strlen(appname)+1); 
+   classhints.res_class= (char *) malloc(strlen(appname)+1);
    strcpy(classhints.res_class, appname);
 
    XStringListToTextProperty(&appname,1,&windowName);
    XStringListToTextProperty(&appname,1,&iconName);
 
    XSetWMProperties(dpy,windowid,&windowName,&iconName,NULL,0,&hints,
-                     &wmhints,&classhints); 
+                     &wmhints,&classhints);
 
    XMapWindow(dpy,windowid);
    XIfEvent(dpy,&event,WaitForNotify,(char *)windowid);
@@ -785,8 +787,8 @@ void main_movie()
    fastdraw = 0;
    drawit();
 }
- 
- 
+
+
 void gmvexit()
 {
   char retmon[80];
@@ -806,7 +808,7 @@ void gmvexit()
    fclose(ffieldfile);
    remove(fldfilenam);
    remove(cfldfilenam);
-   remove(polyfilenam);   
+   remove(polyfilenam);
    remove(sfldfilenam);
    remove(ffldfilenam);
 */
@@ -965,7 +967,7 @@ void usageinfo(void)
 #ifdef BATCH
    sprintf(progname,"gmvBatch %s",gmv_version_no);
 #endif
-   
+
    strcpy(sysname,"Unknown");
    i = uname(&systeminfo);
    if (i > -1)
@@ -982,7 +984,7 @@ void usageinfo(void)
 
    if (usagefile != NULL)
      {
-      fprintf(usagefile,"%s %s %s %s %s", progname, username, sysname, 
+      fprintf(usagefile,"%s %s %s %s %s", progname, username, sysname,
               hostname, datechar);
       fclose(usagefile);
      }
@@ -1000,14 +1002,12 @@ void usageinfo(void)
      }
 
 
-#ifdef __sun	
+#ifdef __sun
    fprintf(mailpipe,"Subject: GMV run \n");
 #endif
-   fprintf(mailpipe,"%s %s %s %s %s", progname, username, sysname, 
+   fprintf(mailpipe,"%s %s %s %s %s", progname, username, sysname,
            hostname, datechar);
    fprintf(mailpipe,""".\n");
    pclose(mailpipe);
 */
 }
-
-

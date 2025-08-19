@@ -101,6 +101,11 @@ set_target_properties(motif_imported PROPERTIES IMPORTED_LOCATION "${MOTIF_LIBRA
   INTERFACE_INCLUDE_DIRECTORIES ${MOTIF_INCLUDE_DIR})
 add_library(MOTIF::MOTIF ALIAS motif_imported)
 
+#
+# Generate gmv_config.h
+#
+include(cmake/generate_config_h.cmake)
+
 
 # ##########################################################################################
 # ##########################################################################################
@@ -138,6 +143,9 @@ set(GMV_SRCS
   readx3d.c x3dread.c Ball.c BallAux.c BallMath.c GLwDrawA.c GLwMDrawA.c)
 
 add_library(gmv ${GMV_SRCS})
+target_include_directories(
+  gmv
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}> )
 target_link_libraries(gmv PUBLIC X11::X11 MOTIF::MOTIF JPEG::JPEG)
 
 # #################### PRINT CONFIGURE STATUS ######################
@@ -155,12 +163,12 @@ message("  CMake install prefix   : ${CMAKE_INSTALL_PREFIX}")
 message("  CMake system processor : ${CMAKE_SYSTEM_PROCESSOR}")
 message("  CMake system name (OS) : ${CMAKE_SYSTEM_NAME}")
 message("")
-message("  C++ Compiler : ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
-if(DEFINED CMAKE_CXX_COMPILER_WRAPPER)
-  message("                 ${CMAKE_CXX_COMPILER_WRAPPER}")
+message("  C Compiler : ${CMAKE_C_COMPILER_ID} ${CMAKE_C_COMPILER_VERSION}")
+if(DEFINED CMAKE_C_COMPILER_WRAPPER)
+  message("                 ${CMAKE_C_COMPILER_WRAPPER}")
 endif()
-message("                 ${CMAKE_CXX_COMPILER}")
-message("  CMAKE_CXX_STANDARD : ${CMAKE_CXX_STANDARD}")
+message("                   ${CMAKE_C_COMPILER}")
+message("  CMAKE_C_STANDARD : ${CMAKE_C_STANDARD}")
 message("")
 
 message("X11 version:   ${X11_VERSION}")

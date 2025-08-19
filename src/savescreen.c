@@ -1,3 +1,5 @@
+#include "gmv_config.h"
+
 #include <Xm/Xm.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -40,9 +42,9 @@ unsigned int parray[];
   int y, i, ii;
 
   int writeerr;
-  char str[] = 
+  char str[] =
     "Error - unable to open rgb output file!\nCheck permissions.";
-  char str2[] = 
+  char str2[] =
     "Error - unable to open jpeg output file!\nCheck permissions.";
   XmString string;
   unsigned int *uiparray;
@@ -83,9 +85,9 @@ unsigned int parray[];
            }
         }
       jpeg_stdio_dest(&cinfo,outjpeg);
-      cinfo.image_width = xsize; 	
+      cinfo.image_width = xsize;
       cinfo.image_height = ysize;
-      cinfo.input_components = 3;	
+      cinfo.input_components = 3;
       cinfo.in_color_space = JCS_RGB;
       jpeg_set_defaults(&cinfo);
       jpeg_set_quality(&cinfo,jpeg_quality,TRUE);

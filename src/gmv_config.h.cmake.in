@@ -1,0 +1,29 @@
+// SPDX-FileCopyrightText: 2025 gmv authors
+//
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+/**
+ * \file gmv_config.h
+ */
+#ifndef GMV_CONFIG_H
+#define GMV_CONFIG_H 1
+
+/* gmv_config.h.  Generated from gmv_config.h.cmake by cmake.  */
+
+/* Define to 1 when cmake build type is "Debug" */
+#cmakedefine GMV_ENABLE_DEBUG 1
+
+/* compiler information */
+#define GMV_BUILD_TYPE "@CMAKE_BUILD_TYPE@"
+#define GMV_BUILD_COMPILER_ID "@CMAKE_CXX_COMPILER_ID@"
+#define GMV_BUILD_COMPILER_VERSION "@CMAKE_CXX_COMPILER_VERSION@"
+
+/* system information */
+#define GMV_SYSTEM_PROCESSOR "@CMAKE_SYSTEM_PROCESSOR@"
+#define GMV_SYSTEM_NAME "@CMAKE_SYSTEM_NAME@"
+
+#ifdef __linux__
+#define LINUX
+#endif
+
+#endif // GMV_CONFIG_H
