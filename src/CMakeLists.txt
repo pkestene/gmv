@@ -89,10 +89,12 @@ add_library(gmv::warnings ALIAS gmv_warnings)
 # check other dependencies
 #
 find_package(X11)
+find_package(OpenGL)
 find_package(Motif)
 find_package(Fontconfig)
 find_package(Freetype)
 find_package(JPEG)
+find_package(SEACASExodus)
 
 # create missing alias targets
 # Motif
@@ -113,7 +115,7 @@ include(cmake/generate_config_h.cmake)
 # ##########################################################################################
 # ##########################################################################################
 set(GMV_SRCS
-  main.c readgmv.c get_statistics.c initstuff.c gmvread.c
+  readgmv.c get_statistics.c initstuff.c gmvread.c
   init_motif.c callbacks.c drawit.c drawaxes.c savescreen.c cbtun.c
   drawpolygons.c drawpolylines.c drawnodepoints.c
   drawcellfaces.c drawcellhiddenedges.c drawvectors.c centerform.c
@@ -142,11 +144,16 @@ set(GMV_SRCS
   concaveform.c readgmvinfo.c matcolorbarform.c readexodus.c
   readx3d.c x3dread.c Ball.c BallAux.c BallMath.c GLwDrawA.c GLwMDrawA.c)
 
-add_library(gmv ${GMV_SRCS})
+add_library(gmvlib ${GMV_SRCS})
 target_include_directories(
-  gmv
+  gmvlib
   PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}> )
-target_link_libraries(gmv PUBLIC X11::X11 MOTIF::MOTIF JPEG::JPEG)
+target_link_libraries(gmvlib PUBLIC X11::X11 MOTIF::MOTIF JPEG::JPEG)
+add_library(gmv::gmvlib ALIAS gmvlib)
+
+add_executable(gmv
+  main.c)
+target_link_libraries(gmv PRIVATE gmv::gmvlib X11::Xt m OpenGL::GL OpenGL::GLU SEACASExodus::exodus)
 
 # #################### PRINT CONFIGURE STATUS ######################
 message("//===================================================")

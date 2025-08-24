@@ -14,7 +14,7 @@
 #define MAXVAL 9.99999e32
 #define direct  dirent
 
-char save_dir[200];
+static char save_dir[200];
 extern char *fldfilenam, *cfldfilenam, *polyfilenam, *sfldfilenam, *ffldfilenam;
 extern FILE *fieldfile, *cfieldfile, *polyfile, *sfieldfile, *ffieldfile;
 
@@ -90,7 +90,7 @@ void readx3d()
          strcpy(x3dsuffix,tok);
         }
      }
-   
+
 
    /*  Initialize data and reopen database files.  */
    readgmv_init();
@@ -158,12 +158,12 @@ void readx3d()
 
    /*  Read cell data and save.  */
    getx3dcelldata();
-   if (!noprintflag) 
+   if (!noprintflag)
       printf("GMV read %d cell data fields.\n",x3d_header.num_cell_fields);
 
    /*  Read node data and skip.  */
    getx3dnodedata();
-   if (!noprintflag) 
+   if (!noprintflag)
       printf("GMV read %d node data fields.\n",x3d_header.num_node_fields);
 
    /*  Close the x3d file.  */
@@ -355,7 +355,7 @@ void getx3dslaves()
    if (x3d_header.numslaves > 0)
      {
 
-      /*  Save slaves as a node flag, slave_type,  */ 
+      /*  Save slaves as a node flag, slave_type,  */
       /*  with none, slave and master types.       */
 
       flag_data = (int *)malloc((nnodes+1) * sizeof(int));
@@ -479,7 +479,7 @@ void getx3dcelldata()
          /*  Calculate node materials.  */
          imat=(short *)malloc((nnodes+1)*sizeof(short));
          if (imat == NULL) memerr();
-         bldnodemats();         
+         bldnodemats();
         }
 
       /*  Free cell field data.  */
@@ -572,7 +572,7 @@ void getx3dBdyfiles()
          ptr = (strstr(entry->d_name,x3dsuffix));
          if (ptr == NULL) ifound = 0;;
         }
-      if (ifound == 0) continue;      
+      if (ifound == 0) continue;
 
       /*  Found a matching Bdy file.  */
       sprintf(bdyfilename,"%s%s",save_dir,entry->d_name);
@@ -680,7 +680,7 @@ void getx3dRegfiles()
          else
            strcpy(tagname,tok);
         }
-       
+
       /*  Read the region data and save.  */
       if (x3d_read_Reg_file(regfilename) > 0) readx3d_error(filnam);
 
@@ -741,9 +741,9 @@ void getx3dRegfiles()
             fmax = -MAXVAL;
             for (i = 0; i < nelem; i++)
               {
-               fmin = (x3d_Reg_data.double_data[i] < fmin) ? 
+               fmin = (x3d_Reg_data.double_data[i] < fmin) ?
                          x3d_Reg_data.double_data[i] : fmin;
-               fmax = (x3d_Reg_data.double_data[i] > fmax) ? 
+               fmax = (x3d_Reg_data.double_data[i] > fmax) ?
                          x3d_Reg_data.double_data[i] : fmax;
               }
             if (fmin >= 0.) fillval = 0;
@@ -784,8 +784,8 @@ void getx3dRegfiles()
                      j = x3d_Reg_data.int_data[i] - 1;
                      cellmats[j] = matid;
                     }
-                 } 
-              } 
+                 }
+              }
 
             FREE(x3d_Reg_data.int_data);
             FREE(x3d_Reg_data.double_data);

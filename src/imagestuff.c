@@ -17,7 +17,6 @@
  *				Paul Haeberli - 1984
  *
  */
-
 #include "gmv_config.h"
 
 #if defined(LINUX) || defined(NT) || defined(MACX)
