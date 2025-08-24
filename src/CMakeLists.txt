@@ -148,12 +148,12 @@ add_library(gmvlib ${GMV_SRCS})
 target_include_directories(
   gmvlib
   PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}> )
-target_link_libraries(gmvlib PUBLIC X11::X11 MOTIF::MOTIF JPEG::JPEG)
+target_link_libraries(gmvlib PUBLIC X11::X11 MOTIF::MOTIF X11::Xt JPEG::JPEG)
 add_library(gmv::gmvlib ALIAS gmvlib)
 
 add_executable(gmv
   main.c)
-target_link_libraries(gmv PRIVATE gmv::gmvlib X11::Xt m OpenGL::GL OpenGL::GLU SEACASExodus::exodus)
+target_link_libraries(gmv PRIVATE gmv::gmvlib m OpenGL::GL OpenGL::GLU SEACASExodus::exodus)
 
 # #################### PRINT CONFIGURE STATUS ######################
 message("//===================================================")
